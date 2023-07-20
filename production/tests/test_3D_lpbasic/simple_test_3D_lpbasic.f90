@@ -13,7 +13,7 @@ type(image)                 :: denoised
 real                        :: smpd=1.0      ! Sampling distance (Angstroms per voxel length)
 real                        :: res           ! Resolution of output image
 integer                     :: ldim(3), ifoo ! ldim is the dimensions of the 3D volume
-character(*), parameter     :: fn_in = '/Users/wietfeldthc/Documents/simpleTestImages/lpForAlannaJun27/vol_noisy.mrc'
+character(*), parameter     :: fn_in = '/home/hartaw/Documents/denoisebgalJune28/vol_noisy.mrc'
 character(256)              :: fn_out, resChar
 
 ! Load the resolution from the commandline
