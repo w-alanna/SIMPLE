@@ -110,8 +110,9 @@ type(simple_program), target :: import_boxes
 type(simple_program), target :: import_cavgs
 type(simple_program), target :: import_movies
 type(simple_program), target :: import_particles
-type(simple_program), target :: test_refine3D
-type(simple_program), target :: test_bgal_refine3D
+type(simple_program), target :: test_refine3D !!!!!!
+type(simple_program), target :: test_bgal_refine3D !!!!!!!!
+type(simple_program), target :: testing          !!!!!!!!!!!!!!!!
 type(simple_program), target :: import_starproject
 type(simple_program), target :: info_image
 type(simple_program), target :: info_stktab
@@ -384,8 +385,9 @@ contains
         call new_import_cavgs
         call new_import_movies
         call new_import_particles
-        call new_test_refine3D
-        call new_test_bgal_refine3D
+        call new_test_refine3D !
+        call new_test_bgal_refine3D !
+        call new_testing !!!!!!!!!!!!!!!!!!!!!!!!!!!!
         call new_import_starproject
         call new_make_cavgs
         call new_make_oris
@@ -496,8 +498,9 @@ contains
         call push2prg_ptr_array(import_cavgs)
         call push2prg_ptr_array(import_movies)
         call push2prg_ptr_array(import_particles)
-        call push2prg_ptr_array(test_refine3D)
-        call push2prg_ptr_array(test_bgal_refine3D)
+        call push2prg_ptr_array(test_refine3D) !
+        call push2prg_ptr_array(test_bgal_refine3D) !
+        call push2prg_ptr_array(testing) !!!!!!!!!!!!!!!!!!
         call push2prg_ptr_array(import_starproject)
         call push2prg_ptr_array(make_cavgs)
         call push2prg_ptr_array(make_oris)
@@ -655,10 +658,12 @@ contains
                 ptr2prg => import_movies
             case('import_particles')
                 ptr2prg => import_particles
-            case('test_refine3D')
+            case('test_refine3D') !!!!!!!!!!!!!!
                 ptr2prg => test_refine3D
-            case('test_bgal_refine3D')
+            case('test_bgal_refine3D') !!!!!!!!!!!!!!
                 ptr2prg => test_bgal_refine3D    
+            case('testing')
+                ptr2prg => testing
             case('import_starproject')
                 ptr2prg => import_starproject
             case('make_cavgs')
@@ -800,6 +805,9 @@ contains
 
     subroutine list_simple_prgs_in_ui
         write(logfhandle,'(A)') assign_optics_groups%name
+        write(logfhandle,'(A)') test_refine3D%name !!!!!!
+        write(logfhandle,'(A)') test_bgal_refine3D%name !!!!!
+        write(logfhandle,'(A)') testing%name
         write(logfhandle,'(A)') automask%name
         write(logfhandle,'(A)') automask2D%name
         write(logfhandle,'(A)') binarize%name
@@ -2572,7 +2580,7 @@ contains
     subroutine new_test_refine3D
         ! PROGRAM SPECIFICATION
         call test_refine3D%new(&
-        &'test refine3D',&                                       ! name
+        &'test_refine3D',&                                       ! name
         &'Import particles to SIMPLE project',&                     ! descr_short
         &'is a program for importing extracted particle images to the project',&
         &'all',&                                                   ! executable
@@ -2594,7 +2602,7 @@ contains
     subroutine new_test_bgal_refine3D
         ! PROGRAM SPECIFICATION
         call test_bgal_refine3D%new(&
-        &'test bgal refine3D',&                                     ! name
+        &'test_bgal_refine3D',&                                     ! name
         &'Import particles to SIMPLE project',&                     ! descr_short
         &'is a program for importing extracted particle images to the project',&
         &'all',&                                                   ! executable
@@ -2612,6 +2620,27 @@ contains
         ! computer controls
         ! <empty>
     end subroutine new_test_bgal_refine3D
+
+    subroutine new_testing
+        call testing%new(&
+        &'testing',&                                     ! name
+        &'Import particles to SIMPLE project',&                     ! descr_short
+        &'is a program for importing extracted particle images to the project',&
+        &'all',&                                                   ! executable
+        &0, 0, 0, 0, 0, 0, 0, .true.)                             ! # entries in each group, requires sp_project
+        ! INPUT PARAMETER SPECIFICATIONS
+        ! image input/output
+        ! <empty>
+        ! parameter input/output
+        ! search controls
+        ! <empty>
+        ! filter controls
+        ! <empty>
+        ! mask controls
+        ! <empty>
+        ! computer controls
+        ! <empty>
+    end subroutine new_testing
 
     subroutine new_export_relion
         ! PROGRAM SPECIFICATION
