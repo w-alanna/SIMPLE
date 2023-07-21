@@ -10,7 +10,7 @@ module simple_commander_test_bgal_refine3D
 
     implicit none
     type(cmdline) :: new_project_cline, import_particles_cline, cluster2D_cline, map_cavgs_selection_cline
-    type(cmdline) :: initial_3Dmodel_cline
+    type(cmdline) :: initial_3Dmodel_cline, refine3D_cline
     type(new_project_commander)         :: new_project_com
     type(import_particles_commander)    :: import_particles_com
     type(cluster2D_autoscale_commander) :: cluster2D_com 
@@ -19,6 +19,7 @@ module simple_commander_test_bgal_refine3D
     character(len=LONGSTRLEN)           :: cwd=''
 
     public :: test_bgal_refine3D_commander
+    private
 
     type, extends(commander_base) :: test_bgal_refine3D_commander
         contains
@@ -57,7 +58,6 @@ module simple_commander_test_bgal_refine3D
         call cluster2D_cline%set('mskdiam', 180.)
         call cluster2D_cline%set('nparts',  4.)
         call cluster2D_cline%set('nthr',    20.)
-        !call cluster2D_cline%set('split_mode', 'even') !test
         call cluster2D_cline%set('objfun',  'euclid')
         call cluster2D_cline%set('projfile', '1_import_particles/bgal.simple')
 
@@ -67,9 +67,18 @@ module simple_commander_test_bgal_refine3D
         call map_cavgs_selection_cline%delete('smpd')
         call map_cavgs_selection_cline%set('prg',  'map_cavgs_selection')
         call map_cavgs_selection_cline%set('stk2', '2_cluster2D/cavgs_iter016_ranked.mrc')
-        !call map_cavgs_selection_cline%set('split_mode', 'even') !test
         call map_cavgs_selection_cline%set('ares', 41.)
-        call map_cavgs_selection_cline%printline() !CHECK
+
+        !intial3D model................
+        initial_3Dmodel_cline = cline
+        !WARNING! Mask diameter too large, falling back on default value; simple_parameters.f90; line:  1203
+        call initial_3Dmodel_cline%delete('smpd')
+        call initial_3Dmodel_cline%set('prg',     'initial_3Dmodel')
+        call initial_3Dmodel_cline%set('smpd',    1.275)
+        call initial_3Dmodel_cline%set('pgrp',    'd2')
+        call initial_3Dmodel_cline%set('mskdiam',  180.)
+        call initial_3Dmodel_cline%set('nthr',     40.)
+        call initial_3Dmodel_cline%set('projfile', '3_selection/bgal.simple')
         
         ! execution of the above commands
         call new_project_com%execute(new_project_cline)
@@ -81,8 +90,12 @@ module simple_commander_test_bgal_refine3D
 
         call simple_getcwd(cwd)
         call simple_chdir( trim(cwd)//"/../", errmsg="")
-        call map_cavgs_selection_com%execute(map_cavgs_selection_cline)        
-
+        call map_cavgs_selection_com%execute(map_cavgs_selection_cline) 
+        
+        call simple_getcwd(cwd)
+        call simple_chdir( trim(cwd)//"/../", errmsg="")
+        call initial_3Dmodel_com%execute(initial_3Dmodel_cline)
+        
     end subroutine exec_test_bgal_refine3D
 
 end module simple_commander_test_bgal_refine3D

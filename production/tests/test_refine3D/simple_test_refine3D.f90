@@ -1,4 +1,3 @@
-
 program simple_test_refine3D
     include 'simple_lib.f08'
     use simple_image,                only: image
@@ -119,7 +118,7 @@ program simple_test_refine3D
 
     call simple_getcwd(cwd)
     call simple_chdir( trim(cwd)//"/../", errmsg="")
-    params_glob%split_mode = 'even'
+    !params_glob%split_mode = 'even'
     call cluster2D_com%execute(cluster2D_cline)
 
     call simple_getcwd(cwd)
@@ -130,5 +129,5 @@ program simple_test_refine3D
     call simple_getcwd(cwd)
     call simple_chdir( trim(cwd)//"/../", errmsg="")
 
-    call initial_3Dmodel_com%execute(initial_3Dmodel_cline)
+   ! call initial_3Dmodel_com%execute(initial_3Dmodel_cline)
 end program simple_test_refine3D
