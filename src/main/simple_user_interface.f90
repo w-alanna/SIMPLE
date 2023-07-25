@@ -110,9 +110,6 @@ type(simple_program), target :: import_boxes
 type(simple_program), target :: import_cavgs
 type(simple_program), target :: import_movies
 type(simple_program), target :: import_particles
-type(simple_program), target :: test_refine3D !!!!!!
-type(simple_program), target :: test_bgal_refine3D !!!!!!!!
-type(simple_program), target :: testing          !!!!!!!!!!!!!!!!
 type(simple_program), target :: import_starproject
 type(simple_program), target :: info_image
 type(simple_program), target :: info_stktab
@@ -166,6 +163,10 @@ type(simple_program), target :: stackops
 type(simple_program), target :: symaxis_search
 type(simple_program), target :: symmetrize_map
 type(simple_program), target :: symmetry_test
+type(simple_program), target :: test_refine3D
+type(simple_program), target :: test_bgal_refine3D
+type(simple_program), target :: test_exp_refine3D
+type(simple_program), target :: test_trpv_refine3D !!!!!!!!
 type(simple_program), target :: tseries_atoms_analysis
 type(simple_program), target :: tseries_import
 type(simple_program), target :: tseries_import_particles
@@ -385,9 +386,6 @@ contains
         call new_import_cavgs
         call new_import_movies
         call new_import_particles
-        call new_test_refine3D !
-        call new_test_bgal_refine3D !
-        call new_testing !!!!!!!!!!!!!!!!!!!!!!!!!!!!
         call new_import_starproject
         call new_make_cavgs
         call new_make_oris
@@ -438,6 +436,10 @@ contains
         call new_symaxis_search
         call new_symmetrize_map
         call new_symmetry_test
+        call new_test_refine3D 
+        call new_test_bgal_refine3D 
+        call new_test_exp_refine3D !!!!!!!!!
+        call new_test_trpv_refine3D  !!!!!!!!!!
         call new_tseries_atoms_analysis
         call new_tseries_import
         call new_tseries_import_particles
@@ -498,9 +500,6 @@ contains
         call push2prg_ptr_array(import_cavgs)
         call push2prg_ptr_array(import_movies)
         call push2prg_ptr_array(import_particles)
-        call push2prg_ptr_array(test_refine3D) !
-        call push2prg_ptr_array(test_bgal_refine3D) !
-        call push2prg_ptr_array(testing) !!!!!!!!!!!!!!!!!!
         call push2prg_ptr_array(import_starproject)
         call push2prg_ptr_array(make_cavgs)
         call push2prg_ptr_array(make_oris)
@@ -549,6 +548,10 @@ contains
         call push2prg_ptr_array(symaxis_search)
         call push2prg_ptr_array(symmetrize_map)
         call push2prg_ptr_array(symmetry_test)
+        call push2prg_ptr_array(test_refine3D) 
+        call push2prg_ptr_array(test_bgal_refine3D) 
+        call push2prg_ptr_array(test_exp_refine3D) !!!!!!!!!!!!!!
+        call push2prg_ptr_array(test_trpv_refine3D) !!!!!!!!!!!!!!!!!!
         call push2prg_ptr_array(tseries_atoms_analysis)
         call push2prg_ptr_array(tseries_import)
         call push2prg_ptr_array(tseries_import_particles)
@@ -658,12 +661,6 @@ contains
                 ptr2prg => import_movies
             case('import_particles')
                 ptr2prg => import_particles
-            case('test_refine3D') !!!!!!!!!!!!!!
-                ptr2prg => test_refine3D
-            case('test_bgal_refine3D') !!!!!!!!!!!!!!
-                ptr2prg => test_bgal_refine3D    
-            case('testing')
-                ptr2prg => testing
             case('import_starproject')
                 ptr2prg => import_starproject
             case('make_cavgs')
@@ -764,6 +761,14 @@ contains
                 ptr2prg => symmetrize_map
             case('symmetry_test')
                 ptr2prg => symmetry_test
+            case('test_refine3D')
+                ptr2prg => test_refine3D
+            case('test_bgal_refine3D')
+                ptr2prg => test_bgal_refine3D    
+            case('test_exp_refine3D')
+                ptr2prg => test_exp_refine3D
+            case('test_trpv_refine3D')  !!!!!!!!!!!!!!!!!!
+                ptr2prg => test_trpv_refine3D
             case('tseries_atoms_analysis')
                 ptr2prg => tseries_atoms_analysis
             case('tseries_import')
@@ -805,9 +810,6 @@ contains
 
     subroutine list_simple_prgs_in_ui
         write(logfhandle,'(A)') assign_optics_groups%name
-        write(logfhandle,'(A)') test_refine3D%name !!!!!!
-        write(logfhandle,'(A)') test_bgal_refine3D%name !!!!!
-        write(logfhandle,'(A)') testing%name
         write(logfhandle,'(A)') automask%name
         write(logfhandle,'(A)') automask2D%name
         write(logfhandle,'(A)') binarize%name
@@ -887,6 +889,10 @@ contains
         write(logfhandle,'(A)') symaxis_search%name
         write(logfhandle,'(A)') symmetrize_map%name
         write(logfhandle,'(A)') symmetry_test%name
+        write(logfhandle,'(A)') test_refine3D%name
+        write(logfhandle,'(A)') test_bgal_refine3D%name
+        write(logfhandle,'(A)') test_exp_refine3D%name !!!!!!!!!!!
+        write(logfhandle,'(A)') test_trpv_refine3D%name !!!!!!!!!!!!!!!
         write(logfhandle,'(A)') uniform_filter2D%name
         write(logfhandle,'(A)') uniform_filter3D%name
         write(logfhandle,'(A)') update_project%name
@@ -2621,9 +2627,9 @@ contains
         ! <empty>
     end subroutine new_test_bgal_refine3D
 
-    subroutine new_testing
-        call testing%new(&
-        &'testing',&                                     ! name
+    subroutine new_test_trpv_refine3D
+        call test_trpv_refine3D%new(&
+        &'test_trpv_refine3D',&                                     ! name
         &'Import particles to SIMPLE project',&                     ! descr_short
         &'is a program for importing extracted particle images to the project',&
         &'all',&                                                   ! executable
@@ -2640,7 +2646,28 @@ contains
         ! <empty>
         ! computer controls
         ! <empty>
-    end subroutine new_testing
+    end subroutine new_test_trpv_refine3D
+
+    subroutine new_test_exp_refine3D
+        call test_exp_refine3D%new(&
+        &'test_exp_refine3D',&                                     ! name
+        &'Import particles to SIMPLE project',&                     ! descr_short
+        &'is a program for importing extracted particle images to the project',&
+        &'all',&                                                   ! executable
+        &0, 0, 0, 0, 0, 0, 0, .true.)                             ! # entries in each group, requires sp_project
+        ! INPUT PARAMETER SPECIFICATIONS
+        ! image input/output
+        ! <empty>
+        ! parameter input/output
+        ! search controls
+        ! <empty>
+        ! filter controls
+        ! <empty>
+        ! mask controls
+        ! <empty>
+        ! computer controls
+        ! <empty>
+    end subroutine new_test_exp_refine3D
 
     subroutine new_export_relion
         ! PROGRAM SPECIFICATION

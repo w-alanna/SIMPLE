@@ -27,8 +27,9 @@ use simple_commander_volops
 use simple_commander_resolest
 use simple_commander_euclid
 use simple_commander_test_refine3D
-use simple_commander_test_bgal_refine3D !new
-use simple_commander_testing !TEST!!!!
+use simple_commander_test_bgal_refine3D
+use simple_commander_test_trpv_refine3D !NEW
+use simple_commander_test_exp_refine3D !NEW
 implicit none
 #include "simple_local_flags.inc"
 
@@ -78,7 +79,9 @@ type(reconstruct3D_commander_distr)         :: xreconstruct3D
 ! CLUSTER3D WORKFLOWS
 type(cluster3D_commander)                   :: xcluster3D
 type(cluster3D_refine_commander)            :: xcluster3D_refine
-type(test_bgal_refine3D_commander)          :: xbgal_refine3D !NEW
+type(test_bgal_refine3D_commander)          :: xbgal_refine3D
+type(test_refine3D_trpv_commander)          :: xtrpv_refine3D !NEW
+type(test_refine3D_exp_commander)           :: xexp_refine3D !NEW
 type(test_refine3D_commander)               :: xrefine3D_test
 
 ! OTHER SINGLE-PARTICLE WORKFLOW PROGRAMS
@@ -146,9 +149,6 @@ type(mkdir_commander)                       :: xmkdir
 
 ! PARALLEL PROCESSING PROGRAMS
 type(split_commander)                       :: xsplit
-
-! TEST
-type(testing_commander)                     :: xtesting
 
 ! OTHER DECLARATIONS
 character(len=STDLEN)                       :: xarg, prg, entire_line
@@ -259,10 +259,14 @@ select case(trim(prg))
         call xcluster3D%execute( cline )
     case( 'cluster3D_refine' )
         call xcluster3D_refine%execute( cline )
-    case( 'test_bgal_refine3D' )            !!!!!!!!!!!!!!!
+    case( 'test_bgal_refine3D' )     
         call xbgal_refine3D%execute( cline )
-    case( 'test_xrefine3D_test' )           !!!!!!!!!!!!!!
+    case( 'test_xrefine3D_test' )     
         call xrefine3D_test%execute( cline )
+    case( 'test_trpv_refine3D' )
+        call xtrpv_refine3D%execute( cline ) !NEW!!!!!!
+    case( 'test_exp_refine3D' )
+        call xexp_refine3D%execute( cline ) !NEW!!!!!!
 
     ! OTHER SINGLE-PARTICLE WORKFLOW PROGRAMS
     case( 'map_cavgs_selection' )
@@ -372,10 +376,6 @@ select case(trim(prg))
     case( 'prune_project' )
         call xprune_project%execute( cline )
 
-    ! TESTS
-    case( 'testing' )
-        call xtesting%execute( cline )
-
     ! SYSTEM INTERACTION PROGRAMS
     case( 'mkdir' )
         call xmkdir%execute(cline)
@@ -391,7 +391,7 @@ call update_job_descriptions_in_project( cline )
 if( logfhandle .ne. OUTPUT_UNIT )then
     if( is_open(logfhandle) ) call fclose(logfhandle)
 endif
-call simple_print_git_version('d06e99b7')
+call simple_print_git_version('11312c86')
 ! end timer and print
 rt_exec = toc(t0)
 call simple_print_timer(rt_exec)
