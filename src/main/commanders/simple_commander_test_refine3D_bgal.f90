@@ -2,7 +2,6 @@ module simple_commander_test_bgal_refine3D
     include 'simple_lib.f08'
     use simple_cmdline,              only: cmdline
     use simple_commander_base,       only: commander_base
-    use simple_cmdline,              only: cmdline
     use simple_commander_project,    only: new_project_commander, import_particles_commander
     use simple_commander_cluster2D,  only: cluster2D_autoscale_commander
     use simple_commander_preprocess, only: map_cavgs_selection_commander
@@ -124,7 +123,6 @@ module simple_commander_test_bgal_refine3D
         call refine3D_two_cline%set('pgrp',       'd2')
         call refine3D_two_cline%set('mskdiam',     180.)
         call refine3D_two_cline%set('nparts',      4.)
-        call refine3D_two_cline%set('split_mode', 'even') !test
         call refine3D_two_cline%set('nthr',        20.)
         call refine3D_two_cline%set('maxits',      10.)
         call refine3D_two_cline%set('refine',     'neigh')
