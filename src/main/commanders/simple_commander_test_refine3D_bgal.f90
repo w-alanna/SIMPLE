@@ -44,25 +44,25 @@ module simple_commander_test_bgal_refine3D
         import_particles_cline = cline
 
         call import_particles_cline%delete('smpd')
-        call import_particles_cline%set('prg',    'import_particles')
-        call import_particles_cline%set('deftab', '/mnt/beegfs/elmlund/testbench/bgal/deftab.txt')
-        call import_particles_cline%set('stk',    '/mnt/beegfs/elmlund/testbench/bgal/sumstack.mrc')
-        call import_particles_cline%set('cs',     2.7)
-        call import_particles_cline%set('fraca',  0.1)
-        call import_particles_cline%set('kv',     300.)
+        call import_particles_cline%set('prg',      'import_particles')
+        call import_particles_cline%set('deftab',   '/mnt/beegfs/elmlund/testbench/bgal/deftab.txt')
+        call import_particles_cline%set('stk',      '/mnt/beegfs/elmlund/testbench/bgal/sumstack.mrc')
+        call import_particles_cline%set('cs',        2.7)
+        call import_particles_cline%set('fraca',     0.1)
+        call import_particles_cline%set('kv',        300.)
         call import_particles_cline%set('projfile', 'bgal.simple')
-        call import_particles_cline%set('smpd',   1.275)
+        call import_particles_cline%set('smpd',      1.275)
 
         ! cluster2D..............
         cluster2D_cline = cline
 
         call cluster2D_cline%delete('smpd')
-        call cluster2D_cline%set('prg',     'cluster2D')
-        call cluster2D_cline%set('ncls',    90.)
-        call cluster2D_cline%set('mskdiam', 180.)
-        call cluster2D_cline%set('nparts',  4.)
-        call cluster2D_cline%set('nthr',    20.)
-        call cluster2D_cline%set('objfun',  'euclid')
+        call cluster2D_cline%set('prg',      'cluster2D')
+        call cluster2D_cline%set('ncls',      90.)
+        call cluster2D_cline%set('mskdiam',   180.)
+        call cluster2D_cline%set('nparts',    4.)
+        call cluster2D_cline%set('nthr',      20.)
+        call cluster2D_cline%set('objfun',   'euclid')
         call cluster2D_cline%set('projfile', '1_import_particles/bgal.simple')
 
         ! map cavgs selection..............
@@ -71,19 +71,19 @@ module simple_commander_test_bgal_refine3D
         call map_cavgs_selection_cline%delete('smpd')
         call map_cavgs_selection_cline%set('prg',  'map_cavgs_selection')
         call map_cavgs_selection_cline%set('stk2', '2_cluster2D/cavgs_iter016_ranked.mrc')
-        call map_cavgs_selection_cline%set('ares', 41.)
+        call map_cavgs_selection_cline%set('ares',  41.)
 
         ! intial3D model................
         initial_3Dmodel_cline = cline
         !LOW-PASS LIMIT FOR ALIGNMENT:   15.0 ANGSTROMS
         !WARNING! Mask diameter too large, falling back on default value; simple_parameters.f90; line:  1203
         call initial_3Dmodel_cline%delete('smpd')
-        call initial_3Dmodel_cline%set('prg',     'initial_3Dmodel')
-        call initial_3Dmodel_cline%set('pgrp',    'd2')
-        call initial_3Dmodel_cline%set('mskdiam',  180.)
-        call initial_3Dmodel_cline%set('nparts',   4.) !test
-        call initial_3Dmodel_cline%set('smpd',     1.275)
-        call initial_3Dmodel_cline%set('nthr',     40.)
+        call initial_3Dmodel_cline%set('prg',      'initial_3Dmodel')
+        call initial_3Dmodel_cline%set('pgrp',     'd2')
+        call initial_3Dmodel_cline%set('mskdiam',   180.)
+        call initial_3Dmodel_cline%set('nparts',    4.)
+        call initial_3Dmodel_cline%set('smpd',      1.275)
+        call initial_3Dmodel_cline%set('nthr',      40.)
         call initial_3Dmodel_cline%set('projfile', '3_selection/bgal.simple')
 
         ! refine3D.....................
@@ -124,7 +124,7 @@ module simple_commander_test_bgal_refine3D
         call refine3D_two_cline%set('pgrp',       'd2')
         call refine3D_two_cline%set('mskdiam',     180.)
         call refine3D_two_cline%set('nparts',      4.)
-        call refine3D_cline%set('split_mode',     'even') !!!
+        call refine3D_two_cline%set('split_mode', 'even') !test
         call refine3D_two_cline%set('nthr',        20.)
         call refine3D_two_cline%set('maxits',      10.)
         call refine3D_two_cline%set('refine',     'neigh')
@@ -137,7 +137,7 @@ module simple_commander_test_bgal_refine3D
         call refine3D_two_cline%set('combine_eo', 'yes')
         call refine3D_two_cline%set('projfile',   '5_refine3D/bgal.simple')
 
-        ! execution of the above commands
+        ! execution of the above commands..........................
         call new_project_com%execute(new_project_cline)
         call import_particles_com%execute(import_particles_cline)
 
