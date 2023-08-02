@@ -91,7 +91,7 @@ module simple_commander_test_trpv_refine3D
         ! end of execution ...................
 
         !START OF THE LOOP
-        do loop= 1,5 
+        !do loop= 1,5 
         
         ! selection ..................................
         map_cavgs_selection_cline = cline
@@ -173,7 +173,7 @@ module simple_commander_test_trpv_refine3D
             write(new_automask, "(I1,A39)") counting, '_refine3D/recvol_state01_iter010_lp.mrc'
             call automask_cline%set('vol1', new_automask)
         end if
-        ! end of automask .........................................\
+        ! end of automask .........................................
 
         counting = counting + 1
 
@@ -236,8 +236,8 @@ module simple_commander_test_trpv_refine3D
         call refine3D_two_com%execute(refine3D_two_cline)
         ! end of execution ..........................
 
-        cluster_sets = cluster_sets + 20.
-        end do
+        !cluster_sets = cluster_sets + 20.
+        !end do
         !END OF THE LOOP
 
     end subroutine exec_test_trpv_refine3D
