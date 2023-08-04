@@ -34,17 +34,6 @@ module simple_commander_test_bgal_refine3D
     subroutine exec_test_bgal_refine3D(self, cline)
         class(test_bgal_refine3D_commander), intent(inout) :: self
         class(cmdline),                      intent(inout) :: cline
-        integer                                            :: loop
-        integer                                            :: counting = 2 !keeps track of the step number
-        real                                               :: cluster_sets = 41.
-        character(len=23)                                  :: new_intital 
-        character(len=24)                                  :: new_intital_more
-        character(len=40)                                  :: new_automask 
-        character(len=41)                                  :: new_automask_more 
-        character(len=23)                                  :: new_refineA 
-        character(len=24)                                  :: new_refineA_more 
-        character(len=22)                                  :: new_refineR 
-        character(len=23)                                  :: new_refineR_more 
 
         ! new project
         new_project_cline = cline
@@ -77,125 +66,111 @@ module simple_commander_test_bgal_refine3D
         call cluster2D_cline%set('objfun',   'euclid')
         call cluster2D_cline%set('projfile', '1_import_particles/bgal.simple')
 
-        ! beginning of loop ................................
-        
-        
-            ! map cavgs selection.................................
-            map_cavgs_selection_cline = cline
+        ! map cavgs selection.................................
+        map_cavgs_selection_cline = cline
 
-            call map_cavgs_selection_cline%delete('smpd')
-            call map_cavgs_selection_cline%set('prg',  'map_cavgs_selection')
-            call map_cavgs_selection_cline%set('stk2', '2_cluster2D/cavgs_iter016_ranked.mrc')
-            call map_cavgs_selection_cline%set('ares',  41.)
-            ! end selection .........................................
+        call map_cavgs_selection_cline%delete('smpd')
+        call map_cavgs_selection_cline%set('prg',  'map_cavgs_selection')
+        call map_cavgs_selection_cline%set('stk2', '2_cluster2D/cavgs_iter016_ranked.mrc')
+        call map_cavgs_selection_cline%set('ares',  60.)
+        ! end selection .........................................
 
-            counting = counting + 1
+        ! intial3D model................
+        initial_3Dmodel_cline = cline
+        !LOW-PASS LIMIT FOR ALIGNMENT:   15.0 ANGSTROMS
+        !WARNING! Mask diameter too large, falling back on default value; simple_parameters.f90; line:  1203
+        call initial_3Dmodel_cline%delete('smpd')
+        call initial_3Dmodel_cline%set('prg',      'initial_3Dmodel')
+        call initial_3Dmodel_cline%set('pgrp',     'd2')
+        call initial_3Dmodel_cline%set('mskdiam',   180.)
+        call initial_3Dmodel_cline%set('nparts',    4.)
+        call initial_3Dmodel_cline%set('smpd',      1.275)
+        call initial_3Dmodel_cline%set('nthr',      40.)
+        call initial_3Dmodel_cline%set('split_mode', 'even')
+        call initial_3Dmodel_cline%set('projfile', '3_selection/bgal.simple')
+        ! end of intital model ........................
 
-            ! intial3D model................
-            initial_3Dmodel_cline = cline
-            !LOW-PASS LIMIT FOR ALIGNMENT:   15.0 ANGSTROMS
-            !WARNING! Mask diameter too large, falling back on default value; simple_parameters.f90; line:  1203
-            call initial_3Dmodel_cline%delete('smpd')
-            call initial_3Dmodel_cline%set('prg',      'initial_3Dmodel')
-            call initial_3Dmodel_cline%set('pgrp',     'd2')
-            call initial_3Dmodel_cline%set('mskdiam',   180.)
-            call initial_3Dmodel_cline%set('nparts',    4.)
-            call initial_3Dmodel_cline%set('smpd',      1.275)
-            call initial_3Dmodel_cline%set('nthr',      40.)
-            call initial_3Dmodel_cline%set('split_mode', 'even')
-            call initial_3Dmodel_cline%set('projfile', '3_selection/bgal.simple')
-            ! end of intital model ........................
-
-            counting = counting + 1
-
-            ! refine3D.....................
-            refine3D_cline = cline
+        ! refine3D.....................
+        refine3D_cline = cline
             
-            call refine3D_cline%delete('smpd')
-            call refine3D_cline%set('prg',        'refine3D')
-            call refine3D_cline%set('pgrp',       'd2')
-            call refine3D_cline%set('mskdiam',     180.)
-            call refine3D_cline%set('nparts',      4.)
-            call refine3D_cline%set('split_mode', 'even')
-            call refine3D_cline%set('nthr',        20.)
-            call refine3D_cline%set('maxits',      10.)
-            call refine3D_cline%set('refine',     'neigh')
-            call refine3D_cline%set('objfun',     'euclid')
-            call refine3D_cline%set('nonuniform', 'yes')
-            call refine3D_cline%set('sigma_est',  'global')
-            ! end refine3D...........................
+        call refine3D_cline%delete('smpd')
+        call refine3D_cline%set('prg',        'refine3D')
+        call refine3D_cline%set('pgrp',       'd2')
+        call refine3D_cline%set('mskdiam',     180.)
+        call refine3D_cline%set('nparts',      4.)
+        call refine3D_cline%set('split_mode', 'even')
+        call refine3D_cline%set('nthr',        20.)
+        call refine3D_cline%set('maxits',      10.)
+        call refine3D_cline%set('refine',     'neigh')
+        call refine3D_cline%set('objfun',     'euclid')
+        call refine3D_cline%set('nonuniform', 'yes')
+        call refine3D_cline%set('sigma_est',  'global')
+        ! end refine3D...........................
 
-            counting = counting + 1
+        ! automask....................
+        automask_cline = cline
 
-            ! automask....................
-            automask_cline = cline
+        call automask_cline%delete('smpd')
+        call automask_cline%set('prg',     'automask')
+        call automask_cline%set('mskdiam',  180.)
+        call automask_cline%set('amsklp',   12.)
+        call automask_cline%set('mw',       465.)
+        call automask_cline%set('thres',    0.012)
+        call automask_cline%set('nthr',     20.)
+        call automask_cline%set('vol1',    '5_refine3D/recvol_state01_iter010_lp.mrc')
+        call automask_cline%set('smpd',     1.275)
+        ! end automask......................
 
-            call automask_cline%delete('smpd')
-            call automask_cline%set('prg',     'automask')
-            call automask_cline%set('mskdiam',  180.)
-            call automask_cline%set('amsklp',   12.)
-            call automask_cline%set('mw',       465.)
-            call automask_cline%set('thres',    0.012)
-            call automask_cline%set('nthr',     20.)
-            call automask_cline%set('vol1',    '5_refine3D/recvol_state01_iter010_lp.mrc')
-            call automask_cline%set('smpd',     1.275)
-            
-            ! end automask......................
+        ! final refinement ....................................
+        refine3D_two_cline = cline
 
-            counting = counting + 1
+        call refine3D_two_cline%delete('smpd')
+        call refine3D_two_cline%set('prg',        'refine3D')
+        call refine3D_two_cline%set('pgrp',       'c4')
+        call refine3D_two_cline%set('mskdiam',     175.)
+        call refine3D_two_cline%set('nparts',      4.)
+        !call refine3D_two_cline%set('split_mode', 'even') !!!
+        call refine3D_two_cline%set('nthr',        20.)
+        call refine3D_two_cline%set('maxits',      10.)
+        call refine3D_two_cline%set('refine',     'neigh')
+        call refine3D_two_cline%set('objfun',     'euclid')
+        call refine3D_two_cline%set('nonuniform', 'yes')
+        call refine3D_two_cline%set('sigma_est',  'global')
+        call refine3D_two_cline%set('continue',   'yes')
+        call refine3D_two_cline%set('mskfile',    '6_automask/automask.mrc')
+        call refine3D_two_cline%set('combine_eo', 'yes')
+        call refine3D_two_cline%set('projfile',   '5_refine3D/bgal.simple')
+        ! end final refinment .................................
 
-            ! final refinement ....................................
-            refine3D_two_cline = cline
-
-            call refine3D_two_cline%delete('smpd')
-            call refine3D_two_cline%set('prg',        'refine3D')
-            call refine3D_two_cline%set('pgrp',       'd2')
-            call refine3D_two_cline%set('mskdiam',     180.)
-            call refine3D_two_cline%set('ml_reg',     'no')
-            call refine3D_two_cline%set('nonuniform', 'yes')
-            call refine3D_two_cline%set('sigma_est',  'global')
-            call refine3D_two_cline%set('continue',   'yes')
-            call refine3D_two_cline%set('mskfile',    '6_automask/automask.mrc')
-            call refine3D_two_cline%set('combine_eo', 'yes')
-            call refine3D_two_cline%set('projfile',   '5_refine3D/bgal.simple')
-            call refine3D_two_cline%set('nparts',      4.)
-            call refine3D_two_cline%set('nthr',        20.)
-
-            
-
-            ! execution from start - finish ..............................
            ! execution of the above commands
-        call new_project_com%execute(new_project_cline)
-        call import_particles_com%execute(import_particles_cline)
+            call new_project_com%execute(new_project_cline)
+            call import_particles_com%execute(import_particles_cline)
 
-        call simple_getcwd(cwd)
-        call simple_chdir( trim(cwd)//"/../", errmsg="")
-        call cluster2D_com%execute(cluster2D_cline)
+            call simple_getcwd(cwd)
+            call simple_chdir( trim(cwd)//"/../", errmsg="")
+            call cluster2D_com%execute(cluster2D_cline)
 
-        call simple_getcwd(cwd)
-        call simple_chdir( trim(cwd)//"/../", errmsg="")
-        call map_cavgs_selection_com%execute(map_cavgs_selection_cline) 
+            call simple_getcwd(cwd)
+            call simple_chdir( trim(cwd)//"/../", errmsg="")
+            call map_cavgs_selection_com%execute(map_cavgs_selection_cline) 
         
-        call simple_getcwd(cwd)
-        call simple_chdir( trim(cwd)//"/../", errmsg="")
-        call initial_3Dmodel_com%execute(initial_3Dmodel_cline)
+            call simple_getcwd(cwd)
+            call simple_chdir( trim(cwd)//"/../", errmsg="")
+            call initial_3Dmodel_com%execute(initial_3Dmodel_cline)
 
-        call simple_getcwd(cwd)
-        call simple_chdir( trim(cwd)//"/../", errmsg="")
-        call refine3D_com%execute(refine3D_cline)
+            call simple_getcwd(cwd)
+            call simple_chdir( trim(cwd)//"/../", errmsg="")
+            call refine3D_com%execute(refine3D_cline)
 
-        call simple_getcwd(cwd)
-        call simple_chdir( trim(cwd)//"/../", errmsg="")
-        call automask_com%execute(automask_cline)
+            call simple_getcwd(cwd)
+            call simple_chdir( trim(cwd)//"/../", errmsg="")
+            call automask_com%execute(automask_cline)
 
-        call simple_getcwd(cwd)
-        call simple_chdir( trim(cwd)//"/../", errmsg="")
-        call refine3D_two_com%execute(refine3D_two_cline)
+            call simple_getcwd(cwd)
+            call simple_chdir( trim(cwd)//"/../", errmsg="")
+            call refine3D_two_com%execute(refine3D_two_cline)
             ! end of execution ..........................................
-
-            !cluster_sets = cluster_sets + 20.
-        
-
+        print*, "------------------- 60 ares ------------------------------"
         ! commands debug
             ! call new_project_cline%printline()
             ! print *, ' -------- '
