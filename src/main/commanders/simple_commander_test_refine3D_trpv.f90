@@ -34,20 +34,6 @@ module simple_commander_test_trpv_refine3D
     subroutine exec_test_trpv_refine3D(self, cline)
         class(test_refine3D_trpv_commander), intent(inout) :: self
         class(cmdline),                      intent(inout) :: cline
-        integer                                            :: loop
-        integer                                            :: counting = 2 !keeps track of the step number
-        real                                               :: cluster_sets = 20.
-        character(len=24)                                  :: new_intital 
-        character(len=25)                                  :: new_intital_more
-        character(len=30)                                  :: new_refine
-        character(len=31)                                  :: new_refine_more
-        character(len=40)                                  :: new_automask 
-        character(len=41)                                  :: new_automask_more 
-        character(len=23)                                  :: new_refineA 
-        character(len=24)                                  :: new_refineA_more 
-        character(len=23)                                  :: new_refineR 
-        character(len=24)                                  :: new_refineR_more 
-        
         
         ! new project
         new_project_cline = cline
@@ -81,17 +67,6 @@ module simple_commander_test_trpv_refine3D
         call cluster2D_cline%set('ml_reg',    'no')
         call cluster2D_cline%set('sigma_est', 'global')
 
-        ! execution of new project - cluster2D ........................
-        call new_project_com%execute(new_project_cline)
-        call import_particles_com%execute(import_particles_cline)
-
-        call simple_getcwd(cwd)
-        call simple_chdir( trim(cwd)//"/../", errmsg="")
-        call cluster2D_com%execute(cluster2D_cline)
-        ! end of execution ...................
-
-        !START OF THE LOOP
-        !do loop= 1,5 
         
         ! selection ..................................
         map_cavgs_selection_cline = cline
@@ -99,10 +74,8 @@ module simple_commander_test_trpv_refine3D
         call map_cavgs_selection_cline%delete('smpd')
         call map_cavgs_selection_cline%set('prg',  'map_cavgs_selection')
         call map_cavgs_selection_cline%set('stk2', '2_cluster2D/cavgs_iter016_ranked.mrc')
-        call map_cavgs_selection_cline%set('ares',  cluster_sets)
+        call map_cavgs_selection_cline%set('ares',  20.)
         ! end of selection .............................
-        
-        counting = counting + 1
 
         ! intial3D model.............
         initial_3Dmodel_cline = cline
@@ -112,20 +85,11 @@ module simple_commander_test_trpv_refine3D
         call initial_3Dmodel_cline%set('pgrp',     'c4')
         call initial_3Dmodel_cline%set('mskdiam',   175.)
         call initial_3Dmodel_cline%set('nparts',    4.)
-        call initial_3Dmodel_cline%set('split_mode', 'even')
         call initial_3Dmodel_cline%set('nthr',      40.)
         call initial_3Dmodel_cline%set('smpd',      1.275)
-        call initial_3Dmodel_cline%set('projfile', 'null')
-        if (counting > 9) then
-            write(new_intital_more, "(I2,A23)") counting, '_selection/trpv1.simple'
-            call initial_3Dmodel_cline%set('projfile',  new_intital_more)
-        else
-            write(new_intital, "(I1,A23)") counting, '_selection/trpv1.simple'
-            call initial_3Dmodel_cline%set('projfile',  new_intital)
-        end if
-        ! end of intital model ........................
+        call initial_3Dmodel_cline%set('projfile', '3_selection/trpv1.simple')
         
-        counting = counting + 1
+        ! end of intital model ........................
 
         ! refine3D............
         refine3D_cline = cline
@@ -142,17 +106,8 @@ module simple_commander_test_trpv_refine3D
         call refine3D_cline%set('objfun',     'euclid')
         call refine3D_cline%set('nonuniform', 'yes')
         call refine3D_cline%set('sigma_est',  'global')
-        call refine3D_cline%set('projfile',   'null')
-        if (counting > 9) then
-            write(new_refine_more, "(I2,A29)") counting, '_initial_3Dmodel/trpv1.simple'
-            call refine3D_cline%set('projfile', new_refine_more)
-        else
-            write(new_refine, "(I1,A29)") counting, '_initial_3Dmodel/trpv1.simple'
-            call refine3D_cline%set('projfile', new_refine)
-        end if
+        call refine3D_cline%set('projfile',   '4_initial_3Dmodel/trpv1.simple')
         ! end of refine3D ...................................
-
-        counting = counting + 1
 
         ! automask..............................
         automask_cline = cline
@@ -164,18 +119,9 @@ module simple_commander_test_trpv_refine3D
         call automask_cline%set('mw',       400.)
         call automask_cline%set('thres',    0.01)
         call automask_cline%set('nthr',     20.)
-        call automask_cline%set('vol1',    'null')
+        call automask_cline%set('vol1',    '5_refine3D/recvol_state01_iter010_lp.mrc')
         call automask_cline%set('smpd',     1.2156)
-        if (counting > 9) then
-            write(new_automask_more, "(I2,A39)") counting, '_refine3D/recvol_state01_iter010_lp.mrc'
-            call automask_cline%set('vol1', new_automask_more)
-        else
-            write(new_automask, "(I1,A39)") counting, '_refine3D/recvol_state01_iter010_lp.mrc'
-            call automask_cline%set('vol1', new_automask)
-        end if
         ! end of automask .........................................
-
-        counting = counting + 1
 
         ! refine3D.....................................................
         refine3D_two_cline = cline
@@ -195,30 +141,23 @@ module simple_commander_test_trpv_refine3D
         call refine3D_two_cline%set('mskfile',    'null')
         call refine3D_two_cline%set('combine_eo', 'yes')
         call refine3D_two_cline%set('projfile',   'null')
-        if (counting > 9) then
-            write(new_refineA_more, "(I2,A22)") counting, '_automask/automask.mrc'
-            call refine3D_two_cline%set('mskfile', new_refineA_more)
-        else
-            write(new_refineA, "(I1,A22)") counting, '_automask/automask.mrc'
-            call refine3D_two_cline%set('mskfile', new_refineA)
-        end if
-        counting = counting - 1 !*****needs to be here because _refine3D & _automask arean't the same number*****
-        if (counting > 9) then
-            write(new_refineR_more, "(I2,A22)") counting, '_refine3D/trpv1.simple'
-            call refine3D_two_cline%set('projfile', new_refineR_more)
-        else
-            write(new_refineR, "(I1,A22)") counting, '_refine3D/trpv1.simple'
-            call refine3D_two_cline%set('projfile', new_refineR)
-        end if
+        call refine3D_two_cline%set('mskfile',    '6_automask/automask.mrc')
+        call refine3D_two_cline%set('combine_eo', 'yes')
+        call refine3D_two_cline%set('projfile',   '5_refine3D/trpv1.simple')
         ! end of refine3D ...............................................
-        
-        counting = counting + 2 !*****because of the -1 *****
 
-        ! execution of selection - finish ..............................
+        ! execution of the above commands........................
+        call new_project_com%execute(new_project_cline)
+        call import_particles_com%execute(import_particles_cline)
+
+        call simple_getcwd(cwd)
+        call simple_chdir( trim(cwd)//"/../", errmsg="")
+        call cluster2D_com%execute(cluster2D_cline)
+
         call simple_getcwd(cwd)
         call simple_chdir( trim(cwd)//"/../", errmsg="")
         call map_cavgs_selection_com%execute(map_cavgs_selection_cline) 
-        
+
         call simple_getcwd(cwd)
         call simple_chdir( trim(cwd)//"/../", errmsg="")
         call initial_3Dmodel_com%execute(initial_3Dmodel_cline)
@@ -234,11 +173,6 @@ module simple_commander_test_trpv_refine3D
         call simple_getcwd(cwd)
         call simple_chdir( trim(cwd)//"/../", errmsg="")
         call refine3D_two_com%execute(refine3D_two_cline)
-        ! end of execution ..........................
-
-        !cluster_sets = cluster_sets + 20.
-        !end do
-        !END OF THE LOOP
 
     end subroutine exec_test_trpv_refine3D
 
