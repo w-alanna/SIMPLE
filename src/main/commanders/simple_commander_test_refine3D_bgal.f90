@@ -72,7 +72,7 @@ module simple_commander_test_bgal_refine3D
         call map_cavgs_selection_cline%delete('smpd')
         call map_cavgs_selection_cline%set('prg',  'map_cavgs_selection')
         call map_cavgs_selection_cline%set('stk2', '2_cluster2D/cavgs_iter016_ranked.mrc')
-        call map_cavgs_selection_cline%set('ares',  60.)
+        call map_cavgs_selection_cline%set('ares',  20.)
         ! end selection .........................................
 
         ! intial3D model................
